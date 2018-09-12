@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>Latency Check</head>
+    <body>
+        <input type="button" value="Arm Batmobile" onclick="arm()"/>
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            let ioGP = io.connect('http://localhost:8080');
+            let rasp = '';
+            let isArm = false;
+            function arm (){
+                rasp = io.connect('http://localhost:8000');
+                isArm = true;
+            }
+            setInterval(()=>{
+                ioGP.emit('time',{time: Date.now()});
+            },42);
+            
+            ioGP.on('t',(time)=>{
+                //console.log('BatBrowser Latency: '+ (Date.now()-time.time) +'ms');
+                rasp.emit('t',time);
+            })
+                
+        </script>
+    </body>
+</html>
